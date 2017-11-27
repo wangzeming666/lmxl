@@ -1,0 +1,44 @@
+通常像下面这样导入 lxml.etree 模块:
+
+from lxml import etree
+
+Element 类
+
+这个一个主要的类，大部分函数都通过它来进行。使用Element工厂函数很容易建立起一个xml元素。
+访问标签名，用tag属性。
+
+root = etree.Element("root")
+print(root.tag)  #root
+
+添加子节点的方法之一，append方法：
+
+root.append( etree.Element("child1") )
+
+更有效的方法是SubElement工厂函数，使用如下：
+
+child2 = etree.SubElement(root, "child2")
+child3 = etree.SubElement(root, "child3")
+
+这个方法，建立元素，添加子节点一步完成。
+
+使用tostring 方法，可以看到刚才建立的 xml文件全貌。
+
+>>>print(etree.tostring(root, pretty_print=True))
+<root>
+  <child1/>
+  <child2/>
+  <child3/>
+</root>
+
+节点本身就是列表
+节点在努力模拟Python中list的样子：
+可以使用索引来获取元素
+对于上面建立的xml，
+
+child = root[0]
+print(child.tag)
+#child1
+
+print(len(root))
+
+这个先做了解，不多记录
