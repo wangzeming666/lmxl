@@ -1,0 +1,63 @@
+XPATH语句可以用来快速定位一个XML文本中的内容,当然也可以是HTML文本，这里我们使用lxml库来解析，达到快速批量获取网页相似内容的功能
+
+安装
+
+$ pip install lxml
+基本使用
+
+假设匹配出网页所含所有图片的链接
+
+from lxml import etree
+import requests
+
+html = requests.get('http://www.lzu.edu.cn').content.decode('utf-8')
+##获取网页代码
+
+dom_tree = etree.HTML(html)
+
+links = doc_tree.xpath('//img/@src')
+
+for i in links:
+    print(i)
+
+##将会输出网页中所有图片标签的链接
+XPath语法讲解
+
+我们假设有如下网页
+
+<html>
+    <head>
+        <title>这是标题</title>
+    </head>
+    <body>
+        <div class="cn_search_engine">
+            <a href="http://www.baidu.com">百度</a>
+        </div>
+        <div class="other_search_engine">
+            <a href="http://www.bing.com">Bing</a>
+            <a href="http://www.google.com">Google</a>
+        </div>
+    </body>
+</html>
+如上，HTML标签是一个树形结构，我们称这个为DOM树，xpath匹配出其中的元素，相当于在树中查找子节点啊，因此效率相对正则表达式要高
+
+"//"和"/"的区别
+两者都用来表示一个节点的路径，不同节点名用“/”分开
+//代表相对路径，匹配可以是任意深度的节点
+/ 代表绝对路径，故对于网页来说，匹配从/html开始
+如同样是解析上述数据中的所有的链接，下面两语句等价
+
+....
+##省略若干代码，dom_tree为我们解析之后的etree对象
+
+##语句一:
+dom_tree.xpath('/html/body/div/a/@href')
+
+##语句二：
+dom_tree.xpath('//div/a/@href')
+获取元素属性和文字的区别
+dom_tree.xpath('//div/a/@href')
+#将返回所有的链接网址
+
+dom_tree.xpath('//div/a/text()')
+#将获取所有链接的名称
